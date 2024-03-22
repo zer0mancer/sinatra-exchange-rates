@@ -38,15 +38,15 @@ get("/:first_currency") do
 end
 
 
-  get("/first_currency/:second_currency") do
+  get("/:first_currency/:second_currency") do
     @original_currency = params.fetch("first_currency")
     @converted_currency = params.fetch("second_currency")
 
-    api_url = "http://api.exchangerate.host/list?access_key=#{ENV["CURRENCY_KEY"]}"
+    api_url = "http://api.exchangerate.host/convert?access_key=#{ENV["CURRENCY_KEY"]}&from=#{@original_currency}&to=#{@converted_currency}&amount=1"
     raw_data = HTTP.get(api_url)
     raw_data_string = raw_data.to_s
     parsed_data = JSON.parse(raw_data_string)
-    @symbols = parsed_data.fetch("currencies").keys
+    @conversion = parsed_data.fetch("result")
 
 
     erb(:conversion)
